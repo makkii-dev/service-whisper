@@ -1,0 +1,21 @@
+{
+  "name": "html",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.26",
+    "@types/react-dom": "^16.9.5",
+    "@types/socket.io-client": "^1.4.32",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "socket.io-client": "^2.3.0"
+  },
+  "devDependencies": {
+    "less": "^3.11.1",
+    "parcel": "^1.12.4"
+  }
+}

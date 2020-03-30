@@ -15,6 +15,7 @@ const Maps = new Map<string, SocketMap>();
 soc.on("connection", socket => {
     console.log("conn=>", socket.id);
     socket.addListener("register", (payload: any) => {
+        console.log("current session number:", Maps.size);
         if (payload.from === "seller") {
             const { pubkey } = payload;
             const socketMap = new SocketMap();
@@ -49,7 +50,6 @@ soc.on("connection", socket => {
                 });
             } else {
                 const ret = socketMap.setBuyerSocket(socket, signature);
-                console.log("ret=>", ret);
                 if (ret.result) {
                     socket.emit("register", {
                         result: true,

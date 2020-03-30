@@ -8,6 +8,7 @@ const blake2b = require("blake2b");
 class SellerConnector extends BaseConnector {
     priKey: string;
     pubkey: string;
+    isRegister = false;
     referred = new Deferred();
     constructor(socket: SocketIOClientStatic["Socket"], priKey?: string) {
         super({
@@ -59,6 +60,7 @@ class SellerConnector extends BaseConnector {
                 result: true,
                 body: { sigature: sig, id }
             });
+            this.isRegister = true;
         } else {
             this.referred.reject(payload);
         }

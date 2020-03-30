@@ -2,6 +2,7 @@ import BaseConnector, { Deferred } from "./baseConnector";
 
 class BuyerConnector extends BaseConnector {
     deferred = new Deferred();
+    isRegister = false;
     constructor(socket: SocketIOClientStatic["Socket"]) {
         super({
             prefix: "buyer",
@@ -29,6 +30,7 @@ class BuyerConnector extends BaseConnector {
             this.setChannel(channel);
             this.init();
             this.deferred.resolve({ result: true });
+            this.isRegister = true;
         } else {
             // register failed
             this.deferred.reject(payload);
