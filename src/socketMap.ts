@@ -7,8 +7,6 @@ const blake2b = require("blake2b");
 type Connector = Socket | undefined;
 type DisconnectHandler = (id: string) => void;
 class SocketMap {
-    id = "";
-
     sellerSocket: Connector;
 
     sellerPubkey = "";
@@ -18,15 +16,11 @@ class SocketMap {
     channel = "";
 
     disconnectHandler = (id: string): void => {
-        console.log("disconect id:", id);
+        console.log("disconnect id:", id);
     };
 
     setDisconnectHandler = (handler: DisconnectHandler): void => {
         this.disconnectHandler = handler;
-    };
-
-    setId = (id: string): void => {
-        this.id = id;
     };
     setChannel = (channel_: string): void => {
         this.channel = channel_;
@@ -89,10 +83,10 @@ class SocketMap {
         );
         this.buyerScoket?.addListener("say" + this.channel, this.buyerListener);
         this.buyerScoket?.on("disconnect", () => {
-            this.disconnectHandler(this.id);
+            this.disconnectHandler(this.channel);
         });
         this.sellerSocket?.on("disconnect", () => {
-            this.disconnectHandler(this.id);
+            this.disconnectHandler(this.channel);
         });
     };
 
@@ -112,6 +106,28 @@ class SocketMap {
                 "buyer socket disconnect"
             );
         }
+    };
+
+    sessionListener = (sender: Socket): void => {
+        if (
+            this.buyerScoket &&
+            this.sellerSocket &&
+            this.buyerScoket.connected &&
+            this.sellerSocket.connected
+        ) {
+            sender.emit("session", {
+                connect: true,
+                buyer: {
+                    id: this.buyerScoket.id
+                },
+                seller: {
+                    id: this.sellerSocket.id
+                }
+            });
+        }
+        sender.emit("session", {
+            connect: false
+        });
     };
 }
 

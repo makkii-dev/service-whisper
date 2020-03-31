@@ -52,6 +52,30 @@ class BaseConnector {
         this.prefix = opts.prefix;
     }
 
+    getSessionStatus = (): Promise<any> => {
+        return new Promise((resolve, reject) => {
+            if (this.socket.disconnected) {
+                reject("connect colsed");
+            } else {
+                const listener = (payload: {
+                    connect: boolean;
+                    buyer: any;
+                    seller: any;
+                }): void => {
+                    const { connect, ...rest } = payload;
+                    if (connect) {
+                        resolve(rest);
+                    } else {
+                        reject("session not open or be closed");
+                    }
+                };
+                this.socket.removeEventListener("session");
+                this.socket.addEventListener("session", listener);
+                this.socket.emit("session", {});
+            }
+        });
+    };
+
     setChannel = (channel_: string): void => {
         this.channel = channel_;
     };

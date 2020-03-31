@@ -21,8 +21,7 @@ soc.on("connection", socket => {
             const socketMap = new SocketMap();
             const ret = socketMap.setSellerSocket(socket, pubkey);
             if (ret.result) {
-                const idx = socket.id + ret.channel!;
-                socketMap.setId(idx);
+                const idx = ret.channel!;
                 socketMap.setDisconnectHandler((id: string) => {
                     Maps.delete(id);
                 });

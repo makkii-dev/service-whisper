@@ -9,7 +9,7 @@ class SellerConnector extends BaseConnector {
     priKey: string;
     pubkey: string;
     isRegister = false;
-    referred = new Deferred();
+    deferred = new Deferred();
     constructor(socket: SocketIOClientStatic["Socket"], priKey?: string) {
         super({
             prefix: "seller",
@@ -42,10 +42,10 @@ class SellerConnector extends BaseConnector {
             from: "seller"
         };
         this.socket.emit("register", payload);
-        this.referred = new Deferred();
+        this.deferred = new Deferred();
         this.socket.removeListener("register", this.registerListener);
         this.socket.addEventListener("register", this.registerListener);
-        return this.referred;
+        return this.deferred;
     };
 
     registerListener = (payload: { result: boolean; body: any }): void => {
@@ -56,13 +56,13 @@ class SellerConnector extends BaseConnector {
             this.setChannel(channel);
             this.init();
             const sig = this.genSig(channel);
-            this.referred.resolve({
+            this.deferred.resolve({
                 result: true,
                 body: { sigature: sig, id }
             });
             this.isRegister = true;
         } else {
-            this.referred.reject(payload);
+            this.deferred.reject(payload);
         }
     };
 
