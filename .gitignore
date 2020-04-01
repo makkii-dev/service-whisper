@@ -3,3 +3,4 @@ cookie.json
 node_modules
 yarn-error.log
 .cache
+lib

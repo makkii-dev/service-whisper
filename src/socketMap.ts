@@ -43,6 +43,7 @@ class SocketMap {
         this.sellerSocket = socket;
         this.sellerPubkey = pubkey;
         this.channel = genChannel();
+        this.setSessionListners();
         return { result: true, channel: this.channel };
     };
 
@@ -71,6 +72,7 @@ class SocketMap {
 
         this.buyerScoket = socket;
         this.init();
+        this.setSessionListners();
         return { result: true };
     };
 
@@ -88,6 +90,17 @@ class SocketMap {
         this.sellerSocket?.on("disconnect", () => {
             this.disconnectHandler(this.channel);
         });
+    };
+
+    setSessionListners = (): void => {
+        this.sellerSocket?.removeAllListeners("session");
+        this.sellerSocket?.removeAllListeners("session");
+        this.sellerSocket?.addListener("session", () =>
+            this.sessionListener(this.sellerSocket!)
+        );
+        this.sellerSocket?.addListener("session", () =>
+            this.sessionListener(this.sellerSocket!)
+        );
     };
 
     sellerListener = (payload: any): void => {
